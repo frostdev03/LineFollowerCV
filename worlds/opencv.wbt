@@ -8,21 +8,64 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.5773502691896257 0.5773502691896257 0.5773502691896257 2.0944
-  position -2.308904605217029e-05 -2.308911133944973e-05 1.8344899868989808
+  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  position -3.085982070691513e-16 -1.5429910353457565e-16 2.779605540727666
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
+  floorSize 2 1
+  floorAppearance PBRAppearance {
+    roughness 1
+    roughnessMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/textures/parquetry/chequered_parquetry_roughness.jpg"
+      ]
+    }
+    metalness 0
+    normalMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/textures/parquetry/chequered_parquetry_normal.jpg"
+      ]
+    }
+    occlusionMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/textures/parquetry/chequered_parquetry_occlusion.jpg"
+      ]
+    }
+  }
+}
+Solid {
+  translation 0 0.0400007 1.01962e-07
+  rotation 1 0 0 -1.5707953071795862
+  scale 0.01 0.01 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 0
+      }
+      geometry Mesh {
+        url [
+          "E:/DOWNLOAD/Mini Track V1/Mini Track V1.obj"
+        ]
+      }
+    }
+  ]
 }
 E-puck {
-  hidden position_0_0 3.095603814354226e-08
-  hidden position_0_1 3.0956083317296146e-08
-  hidden rotation_1 0 1 0 2.9802322387695313e-08
-  hidden rotation_2 0 1 0 2.9802322387695313e-08
-  translation 9.677333831819436e-11 1.781514315245801e-11 -6.391454876148242e-05
-  rotation 0.9998611873750802 -0.016661511945920027 7.555712161026917e-07 1.1908991554616556e-07
-  controller "showing_captured_image"
+  hidden linearVelocity_0 -0.12347118927768957 0.018820815115250748 0.00012493335666312964
+  hidden angularVelocity_0 -0.00023840879148917873 -0.00031519849059069745 -0.021127743008944044
+  hidden translation_1 0 0.025999999999999943 0.02
+  hidden rotation_1 0 1 0 6.17420926845318
+  hidden linearVelocity_1 -0.12406811781131165 0.019266412490763617 -4.952326658316926e-05
+  hidden angularVelocity_1 -0.962869179916635 -6.206108900192745 -0.03394386745584477
+  hidden translation_2 0 -0.02599999999999991 0.02
+  hidden rotation_2 0 -0.9999999999999999 0 2.7758638177908423
+  hidden linearVelocity_2 -0.12405787786613263 0.018560510708173817 -0.00011555832490017486
+  hidden angularVelocity_2 -0.9725707930438106 -6.2046204900137125 -0.006163236757274593
+  translation 0.5019349470906144 -0.34539615802686685 -0.00012688274352986272
+  rotation -5.9810382055983975e-05 -2.1343227062729955e-05 -0.9999999979835925 -2.988815392678162
+  controller "lfr_opencv"
 }

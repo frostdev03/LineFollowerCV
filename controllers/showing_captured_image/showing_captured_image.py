@@ -1,16 +1,43 @@
-from controller import Robot, Camera, Motor
-import cv2
-import numpy as np
+"""class controller."""
 
-# Initialize the Robot
+# You may need to import some classes of the controller module. Ex:
+#  from controller import Robot, Motor, DistanceSensor
+from controller import Robot
+import numpy as np
+import cv2 
+
+def get_center(im):
+    gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+    w, h = gray.shape
+    ret, thresh = cv2.threshold(gray, 127,255, cv2.THRESH_BINARY_INV)
+    
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(im, contours, -1, (0,0,255), 5 )
+    
+    cX = 0
+    cY = 0
+    if len(contours)>0:
+      c = contours[0]
+      M = cv2.moments(c)
+      if (M["m00"]!=0):
+          cX = int(M["m10"] / M["m00"])
+          cY = int(M["m01"] / M["m00"])
+          cv2.circle(im, (cX,cY), 3, (0,255,0),-1)
+          #cv2.circle(im, (cX+150,cY), 40, (0,255,255),-1)
+          #cv2.circle(im, (cX-150,cY), 40, (0,255,255),-1)
+          #cv2.line(im, (cX-250,0), (cX-250,h), (255,0,255), 25)
+          #cv2.line(im, (cX+250,0), (cX+250,h), (255,0,255), 25)
+    return  cX, cY, im
+      
+# create the Robot instance.
 robot = Robot()
+
+# get the time step of the current world.
 timestep = int(robot.getBasicTimeStep())
 
-# Initialize the Camera
-camera = robot.getDevice('camera')
-camera.enable(timestep)
+cam = robot.getDevice('camera')
+cam.enable(timestep)
 
-# Initialize Motors
 left_motor = robot.getDevice('left wheel motor')
 right_motor = robot.getDevice('right wheel motor')
 left_motor.setPosition(float('inf'))
@@ -18,45 +45,35 @@ right_motor.setPosition(float('inf'))
 left_motor.setVelocity(0.0)
 right_motor.setVelocity(0.0)
 
-# Get camera dimensions
-width = camera.getWidth()
-height = camera.getHeight()
 
-# Desired dimensions for the resized image
-resized_width = 1080
-resized_height = 1080
-
-# Create a named window for the display
-cv2.namedWindow('e-puck Camera', cv2.WINDOW_NORMAL)
-
-# Main loop
+# Main loop:
+# - perform simulation steps until Webots is stopping the controller
+v = 5
 while robot.step(timestep) != -1:
-    # Capture image
-    image = camera.getImage()
+       
+    img = cam.getImageArray()
+    img = np.asarray(img, dtype=np.uint8)
+    img = cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
+    img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    crop_img = cv2.flip(img, 1)
+    
+    cX,cY, im = get_center(crop_img)
+    cv2.imshow("Image", im)
+    cv2.waitKey(33)
+    
+    vl = v
+    vr = v
+    if (cX>90):
+        #ruotare a sinistra
+        vr = -v
+    if (cX<40):
+        #ruotare a sinistra
+        vl = -v
+        
+    #print(cX,cY)
+    left_motor.setVelocity(vl)
+    right_motor.setVelocity(vr)
+    
 
-    # Convert the Webots image to a format compatible with OpenCV
-    # Webots image is a single string, need to convert it to a numpy array
-    img = np.zeros((height, width, 3), np.uint8)
-    for y in range(height):
-        for x in range(width):
-            r = camera.imageGetRed(image, width, x, y)
-            g = camera.imageGetGreen(image, width, x, y)
-            b = camera.imageGetBlue(image, width, x, y)
-            img[y, x] = [b, g, r]
 
-    # Resize the image
-    resized_img = cv2.resize(img, (resized_width, resized_height))
-
-    # Display the resized image using OpenCV
-    cv2.imshow('e-puck Camera', resized_img)
-
-    # Set motor velocities (example velocities, adjust as needed)
-    left_motor.setVelocity(2.0)  # Set left motor speed
-    right_motor.setVelocity(2.0)  # Set right motor speed
-
-    # Break the loop if 'q' is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-# Release the OpenCV window
-cv2.destroyAllWindows()
+# Enter here exit cleanup code.
