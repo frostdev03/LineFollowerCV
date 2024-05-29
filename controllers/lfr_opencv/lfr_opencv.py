@@ -1,7 +1,3 @@
-"""class controller."""
-
-# You may need to import some classes of the controller module. Ex:
-#  from controller import Robot, Motor, DistanceSensor
 from controller import Robot
 import numpy as np
 import cv2
@@ -51,7 +47,7 @@ while robot.step(timestep) != -1:
     img = np.asarray(img, dtype=np.uint8)
     img = cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
     img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
-    img = cv2.resize(img, (0, 0), fx=2.0, fy=2.0)
+    img = cv2.resize(img, (0, 0), fx=3.5, fy=3.5)
     crop_img = cv2.flip(img, 1)
 
     cX, cY, im = get_center(crop_img)
@@ -59,7 +55,9 @@ while robot.step(timestep) != -1:
     cv2.waitKey(33)
     
     width = im.shape[1]
+    # width = 320
     center_point = width // 2
+    print(center_point)
     error = cX - center_point
     
     # Display the image and error value
