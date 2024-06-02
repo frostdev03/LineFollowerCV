@@ -31,31 +31,32 @@ def get_center(im):
 
 # Define fuzzy system
 # Input
-error = ctl.Antecedent(np.arange(-210, 211, 1), 'Error')
-delta_error = ctl.Antecedent(np.arange(-210, 211, 1), 'Delta Error')
+error = ctl.Antecedent(np.arange(-210, 211, 0.1), 'Error')
+delta_error = ctl.Antecedent(np.arange(-210, 211, 0.1), 'Delta Error')
 
 # Output
 rms = ctl.Consequent(np.arange(0, 6.29, 0.1), 'RMS')
 lms = ctl.Consequent(np.arange(0, 6.29, 0.1), 'LMS')
 
 # Membership functions for error
-error['negative'] = fuzz.trimf(error.universe, [-210, -100, 0])
-error['zero'] = fuzz.trimf(error.universe, [-100, 0, 100])
-error['positive'] = fuzz.trimf(error.universe, [0, 100, 210])
+error['negative'] = fuzz.trapmf(error.universe, [-210, -210, -37.5, 0])
+error['zero'] = fuzz.trimf(error.universe, [-20, 0, 20])
+error['positive'] = fuzz.trapmf(error.universe, [0, 37.5, 210, 210])
 
 # Membership functions for delta_error
-delta_error['negative'] = fuzz.trimf(delta_error.universe, [-210, -100, 0])
-delta_error['zero'] = fuzz.trimf(delta_error.universe, [-100, 0, 100])
-delta_error['positive'] = fuzz.trimf(delta_error.universe, [0, 100, 210])
+delta_error['negative'] = fuzz.trapmf(delta_error.universe, [-210, -210, -37.5, 0])
+delta_error['zero'] = fuzz.trimf(delta_error.universe, [-20, 0, 20])
+delta_error['positive'] = fuzz.trapmf(delta_error.universe, [0, 37.5, 210, 210])
+
 
 # Membership functions for motor speed
-rms['slow'] = fuzz.trimf(rms.universe, [0, 0, 2.14])
-rms['medium'] = fuzz.trimf(rms.universe, [2.14, 3.14, 4.28])
-rms['fast'] = fuzz.trimf(rms.universe, [4.28, 6.28, 6.28])
+rms['slow'] = fuzz.trimf(rms.universe, [0, 0, 1.14])
+rms['medium'] = fuzz.trimf(rms.universe, [1.14, 3.14, 5.28])
+rms['fast'] = fuzz.trimf(rms.universe, [5.28, 6.28, 6.28])
 
-lms['slow'] = fuzz.trimf(lms.universe, [0, 0, 2.14])
-lms['medium'] = fuzz.trimf(lms.universe, [2.14, 3.14, 4.28])
-lms['fast'] = fuzz.trimf(lms.universe, [4.28, 6.28, 6.28])
+lms['slow'] = fuzz.trimf(lms.universe, [0, 0, 1.14])
+lms['medium'] = fuzz.trimf(lms.universe, [1.14, 3.14, 5.28])
+lms['fast'] = fuzz.trimf(lms.universe, [5.28, 6.28, 6.28])
 
 # Define rules
 rules = [ 
@@ -68,7 +69,7 @@ rules = [
     ctl.Rule(error['zero'] & delta_error['positive'], (rms['slow'], lms['medium'])),
     
     ctl.Rule(error['positive'] & delta_error['negative'], (rms['fast'], lms['fast'])),
-    ctl.Rule(error['positive'] & delta_error['zero'], (rms['medium'], lms['fast'])),
+    ctl.Rule(error['positive'] & delta_error['zero'], (rms['slow'], lms['medium'])),
     ctl.Rule(error['positive'] & delta_error['positive'], (rms['slow'], lms['fast']))]
 
 # Control system
