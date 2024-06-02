@@ -1,6 +1,8 @@
 # Line Follower Robot
 Line Follower Robot in Webots using Fuzzy Logic Controller
 
+![WhatsApp Image 2024-06-02 at 8 06 38 PM](https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/793c2230-d276-4fba-8cb5-ec62210725e6)
+
 ## Project Description
 This project implements fuzzy control to adjust the speed of the right and left motors based on position error and change in position error in a line follower robot. This robot is able to follow a predetermined line path by relying on the camera to detect the center of the line and adjust the motor speed to keep the robot on track.
 
