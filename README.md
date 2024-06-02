@@ -6,7 +6,7 @@ Line Follower Robot in Webots using Fuzzy Logic Controller
 ## Project Description
 This project implements fuzzy control to adjust the speed of the right and left motors based on position error and change in position error in a line follower robot. This robot is able to follow a predetermined line path by relying on the camera to detect the center of the line and adjust the motor speed to keep the robot on track.
 
-## Main Feature
+## Main Features
 - Fuzzy Control: Uses fuzzy control to adjust motor speed based on error and change in error (delta error).
 - Line Center Detection: Uses OpenCV to process images from the camera and detect the line center.
 - Data Storage: Saved the error, delta error, and motor speed data (LMS and RMS) into a CSV file for further analysis.
