@@ -11,7 +11,7 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - Data Visualization and Analysis: Plot graphs of error, delta error, LMS, and RMS and calculate and display rise time, settling time, average error, delta error, and error mode.
 - Robot Movement Map: Display the robot movement map for movement pattern analysis.
 
-## Before running this program you must install:
+## Before running this program you must install
 - Python 3.6 or higher
 - NumPy
 - OpenCv
@@ -19,7 +19,7 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - Scikit-Fuzzy
 - Webots
 
-## How to use:
+## How to use
 - Clone repository
   ```
   $ git clone https://github.com/username/robot-line-follower.git
