@@ -9,14 +9,14 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
-  position -3.085982070691513e-16 -1.5429910353457565e-16 2.779605540727666
+  position 4.464366699479084e-17 -5.357240039374901e-16 3.2169152326750807
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
-  floorSize 2 1
+  floorSize 3 2
   floorAppearance PBRAppearance {
     roughness 1
     roughnessMap ImageTexture {
@@ -38,8 +38,8 @@ RectangleArena {
   }
 }
 Solid {
-  translation 0 0.0400007 1.01962e-07
-  rotation 1 0 0 -1.5707953071795862
+  translation 0.031942 -0.022303 0.0091948
+  rotation 1 0 0 1.5708
   scale 0.01 0.01 0.01
   children [
     Shape {
@@ -55,9 +55,9 @@ Solid {
   ]
 }
 E-puck {
-  hidden rotation_1 0 1 0 6.17420926845318
-  hidden rotation_2 0 -0.9999999999999999 0 2.7758638177908423
-  translation 0.5019349470906144 -0.34539615802686685 -0.00012688274352986272
-  rotation -5.9810382055983975e-05 -2.1343227062729955e-05 -0.9999999979835925 -2.988815392678162
+  translation -0.7435976711361412 0.2844868234596843 -6.569503520471517e-05
+  rotation -0.0010272360765500375 0.001248201724242938 0.9999986933883958 0.6331403738916733
   controller "lfr_cam_fuzzy"
+  camera_width 120
+  camera_height 120
 }

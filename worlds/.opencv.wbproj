@@ -6,6 +6,6 @@ minimizedPerspectives: 000000ff00000000fd000000020000000100000312000003acfc02000
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 3 "controllers/lfr_opencv/lfr_opencv.py" "controllers/accesing_camera/accesing_camera.py" "controllers/showing_captured_image/showing_captured_image.py" "controllers/lfr_cam_fuzzy/lfr_cam_fuzzy.py"
+textFiles: 1 "controllers/lfr_opencv/lfr_opencv.py" "controllers/lfr_cam_fuzzy/lfr_cam_fuzzy.py" "controllers/fuzzy_opencv_lfr_fixed_amin/fuzzy_opencv_lfr_fixed_amin.py"
 consoles: Console:All:All
 renderingDevicePerspectives: e-puck:camera;1;1;0;0
