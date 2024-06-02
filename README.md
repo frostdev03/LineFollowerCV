@@ -1,5 +1,4 @@
 # Line Follower Robot
-Line Follower Robot in Webots using Fuzzy Logic Controller
 
 ![WhatsApp Image 2024-06-02 at 8 06 38 PM](https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/793c2230-d276-4fba-8cb5-ec62210725e6)
 
@@ -36,10 +35,10 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - Run 
 
 ## Project Structure
-- lfr_cam_trinity.py: Script utama untuk mengontrol robot line follower.
-- robot_readings.csv: File CSV untuk menyimpan data error, delta error, dan kecepatan motor.
-- olah_data.ipynb: Skrip untuk memvisualisasikan dan menganalisis data yang telah terkumpul.
-- README.md: Deskripsi proyek.
+- lfr_cam_trinity.py: The main script to control the line follower robot.
+- robot_readings.csv: CSV file to store error, delta error, and motor speed data.
+- olah_data.ipynb: Script to visualize and analyze the collected data.
+- README.md: Project description.
 
 ## Useful Links
 - https://www.neliti.com/id/publications/66722/penerapan-logika-fuzzy-dan-pulse-width-modulation-untuk-sistem-kendali-kecepatan
