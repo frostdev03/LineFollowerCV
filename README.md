@@ -3,7 +3,7 @@
 ![WhatsApp Image 2024-06-02 at 8 06 38 PM](https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/793c2230-d276-4fba-8cb5-ec62210725e6)
 
 ## Project Description
-This project implements fuzzy control to adjust the speed of the right and left motors based on position error and change in position error in a line follower robot. This robot is able to follow a predetermined line path by relying on the camera to detect the center of the line and adjust the motor speed to keep the robot on track.
+This project implements fuzzy control to adjust the speed of the right and left motors based on position error and change in position error in a line follower robot. This robot is able to follow a predetermined line path by relying on the camera to detect the center of the line (arena) and adjust the motor speed to keep the robot stable and keep on track.
 
 ## Main Features
 - Fuzzy Control: Uses fuzzy control to adjust motor speed based on error and change in error (delta error).
@@ -23,14 +23,13 @@ This project implements fuzzy control to adjust the speed of the right and left 
 ## How to use
 - Clone repository
   ```
-  $ git clone https://github.com/username/robot-line-follower.git
+  $ git clone https://github.com/frostdev03/LineFollowerRobotWithCamera
   $ cd robot-line-follower
   ```
 - Install dependency
   ```
   $ pip install -r requirements
   ```
-- Adjust the position of the arena
 - Select the required controller
 - Run 
 
