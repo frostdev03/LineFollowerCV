@@ -24,7 +24,7 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - Clone repository
   ```
   $ git clone https://github.com/frostdev03/LineFollowerRobotWithCamera
-  $ cd robot-line-follower
+  $ cd LineFollowerRobotWithCamera
   ```
 - Install dependency
   ```
@@ -34,7 +34,7 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - Run 
 
 ## Project Structure
-- lfr_cam_trinity.py: The main script to control the line follower robot.
+- lfr_cam_fuzzy.py: The main script to control the line follower robot.
 - robot_readings.csv: CSV file to store error, delta error, and motor speed data.
 - olah_data.ipynb: Script to visualize and analyze the collected data.
 - README.md: Project description.
