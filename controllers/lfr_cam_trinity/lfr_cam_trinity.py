@@ -67,8 +67,8 @@ rules = [
     ctl.Rule(error['zero'] & delta_error['zero'], (rms['fast'], lms['fast'])),
     ctl.Rule(error['zero'] & delta_error['positive'], (rms['slow'], lms['medium'])),
     
-    ctl.Rule(error['positive'] & delta_error['negative'], (rms['fast'], lms['fast'])),
-    ctl.Rule(error['positive'] & delta_error['zero'], (rms['slow'], lms['medium'])),
+    ctl.Rule(error['positive'] & delta_error['negative'], (rms['slow'], lms['fast'])),
+    ctl.Rule(error['positive'] & delta_error['zero'], (rms['medium'], lms['fast'])),
     ctl.Rule(error['positive'] & delta_error['positive'], (rms['slow'], lms['fast']))]
 
 # Control system
@@ -140,6 +140,24 @@ while robot.step(timestep) != -1:
 
         right_speed = rms_sim.output['RMS']
         left_speed = lms_sim.output['LMS']
+        
+        # Fuzzy inference & validation input
+        try:
+            rms_sim.input['Error'] = error
+            rms_sim.input['Delta Error'] = delta_error
+            lms_sim.input['Error'] = error
+            lms_sim.input['Delta Error'] = delta_error
+
+            rms_sim.compute()
+            lms_sim.compute()
+
+            right_speed = rms_sim.output['RMS']
+            left_speed = lms_sim.output['LMS']
+        except Exception as e:
+            print(f"Error in fuzzy computation: {e}")
+            print(f"Error Value: {error}, Delta Error: {delta_error}")
+            right_speed = 0
+            left_speed = 0
 
         # Set motor velocities
         left_motor.setVelocity(left_speed)
@@ -158,7 +176,7 @@ while robot.step(timestep) != -1:
         csv_writer.writerow([error, delta_error, left_speed, right_speed])
         
     else:
-        print("Tidak ada arena terdeteksi")
+        print("Camera tidak mendeteksi apapun")
 
 csv_file.close()
 cv2.destroyAllWindows()

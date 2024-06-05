@@ -3,108 +3,93 @@ import numpy as np
 import cv2
 import skfuzzy as fuzz
 import skfuzzy.control as ctl
+import csv
 
 def get_center(im):
     gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
     ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
-
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+    
     cX = 0
     cY = 0
-    valid_contours = []
     height, width = im.shape[:2]
-    for c in contours:
-        area = cv2.contourArea(c)
-        if 500 < area < 5000:  # Filter contours by area size
-            x, y, w, h = cv2.boundingRect(c)
-            if y + h > height // 2:  # Only consider contours in the bottom half of the image
-                valid_contours.append(c)
-
-    if valid_contours:
-        c = max(valid_contours, key=cv2.contourArea)  # Select the largest valid contour
+    if len(contours) > 0:
+        c = contours[0]
         M = cv2.moments(c)
         if M["m00"] != 0:
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
             cv2.circle(im, (cX, cY), 3, (0, 255, 0), -1)
-
-        # Draw only valid contours
-        cv2.drawContours(im, valid_contours, -1, (0, 0, 255), 5)
-
-    # Center line
-    center_x = width // 2
-    cv2.line(im, (center_x, 0), (center_x, height), (255, 0, 0), 2)
-
+            
+        # Create centered line
+        center_x = width // 2
+        cv2.line(im, (center_x, 0), (center_x, height), (255, 0, 0), 2)
+        
     return cX, cY, im
 
-
+# Define fuzzy system
 # Input
-error = ctl.Antecedent(np.arange(-210, 211, 1), 'Error')
-delta_error = ctl.Antecedent(np.arange(-210, 211, 1), 'Delta Error')
+error = ctl.Antecedent(np.arange(-420, 421, 0.1), 'Error')
+delta_error = ctl.Antecedent(np.arange(-420, 421, 0.1), 'Delta Error')
 
 # Output
-left_motor_speed = ctl.Consequent(np.arange(0, 6.29, 0.1), 'Left Motor Speed')
-right_motor_speed = ctl.Consequent(np.arange(0, 6.29, 0.1), 'Right Motor Speed')
+rms = ctl.Consequent(np.arange(0, 6.29, 0.1), 'RMS')
+lms = ctl.Consequent(np.arange(0, 6.29, 0.1), 'LMS')
 
 # Membership functions for error
-error['highly_negative'] = fuzz.trimf(error.universe, [-210, -210, -105])
-error['negative'] = fuzz.trimf(error.universe, [-210, -105, 0])
-error['mid'] = fuzz.trimf(error.universe, [-105, 0, 105])
-error['positive'] = fuzz.trimf(error.universe, [0, 105, 210])
-error['highly_positive'] = fuzz.trimf(error.universe, [105, 210, 210])
+error['very_negative'] = fuzz.trapmf(error.universe, [-420, -420, -300, -100])
+error['negative'] = fuzz.trapmf(error.universe, [-300, -200, -50, 0])
+error['zero'] = fuzz.trimf(error.universe, [-30, 0, 30])
+error['positive'] = fuzz.trapmf(error.universe, [0, 50, 200, 300])
+error['very_positive'] = fuzz.trapmf(error.universe, [100, 300, 420, 420])
 
 # Membership functions for delta_error
-delta_error['highly_negative'] = fuzz.trimf(delta_error.universe, [-210, -210, -105])
-delta_error['negative'] = fuzz.trimf(delta_error.universe, [-210, -105, 0])
-delta_error['mid'] = fuzz.trimf(delta_error.universe, [-105, 0, 105])
-delta_error['positive'] = fuzz.trimf(delta_error.universe, [0, 105, 210])
-delta_error['highly_positive'] = fuzz.trimf(delta_error.universe, [105, 210, 210])
+delta_error['very_negative'] = fuzz.trapmf(error.universe, [-420, -420, -300, -100])
+delta_error['negative'] = fuzz.trapmf(delta_error.universe, [-300, -200, -50, 0])
+delta_error['zero'] = fuzz.trimf(delta_error.universe, [-30, 0, 30])
+delta_error['positive'] = fuzz.trapmf(delta_error.universe, [0, 50, 200, 300])
+delta_error['very_positive'] = fuzz.trapmf(error.universe, [100, 300, 420, 420])
 
 # Membership functions for motor speed
-left_motor_speed['very_slow'] = fuzz.trimf(left_motor_speed.universe, [0, 0, 1.57])
-left_motor_speed['slow'] = fuzz.trimf(left_motor_speed.universe, [0.79, 1.57, 3.14])
-left_motor_speed['medium'] = fuzz.trimf(left_motor_speed.universe, [1.57, 3.14, 4.71])
-left_motor_speed['fast'] = fuzz.trimf(left_motor_speed.universe, [3.14, 4.71, 6.28])
-left_motor_speed['very_fast'] = fuzz.trimf(left_motor_speed.universe, [4.71, 6.28, 6.28])
+rms['slow'] = fuzz.trimf(rms.universe, [0, 0, 3.14])
+rms['medium'] = fuzz.trimf(rms.universe, [3.14, 4.14, 5.28])
+rms['fast'] = fuzz.trimf(rms.universe, [5.28, 6.28, 6.28])
 
-right_motor_speed['very_slow'] = fuzz.trimf(right_motor_speed.universe, [0, 0, 1.57])
-right_motor_speed['slow'] = fuzz.trimf(right_motor_speed.universe, [0.79, 1.57, 3.14])
-right_motor_speed['medium'] = fuzz.trimf(right_motor_speed.universe, [1.57, 3.14, 4.71])
-right_motor_speed['fast'] = fuzz.trimf(right_motor_speed.universe, [3.14, 4.71, 6.28])
-right_motor_speed['very_fast'] = fuzz.trimf(right_motor_speed.universe, [4.71, 6.28, 6.28])
+lms['slow'] = fuzz.trimf(lms.universe, [0, 0, 3.14])
+lms['medium'] = fuzz.trimf(lms.universe, [3.14, 4.14, 5.28])
+lms['fast'] = fuzz.trimf(lms.universe, [5.28, 6.28, 6.28])
 
 # Define rules
 rules = [
-    ctl.Rule(error['highly_negative'] & delta_error['highly_negative'], (left_motor_speed['very_fast'], right_motor_speed['very_slow'])),
-    ctl.Rule(error['highly_negative'] & delta_error['negative'], (left_motor_speed['fast'], right_motor_speed['slow'])),
-    ctl.Rule(error['highly_negative'] & delta_error['mid'], (left_motor_speed['medium'], right_motor_speed['slow'])),
-    ctl.Rule(error['highly_negative'] & delta_error['positive'], (left_motor_speed['medium'], right_motor_speed['medium'])),
-    ctl.Rule(error['highly_negative'] & delta_error['highly_positive'], (left_motor_speed['slow'], right_motor_speed['fast'])),
+    ctl.Rule(error['very_negative'] & delta_error['very_negative'], (rms['fast'], lms['slow'])),
+    ctl.Rule(error['very_negative'] & delta_error['negative'], (rms['fast'], lms['slow'])),
+    ctl.Rule(error['very_negative'] & delta_error['zero'], (rms['fast'], lms['medium'])),
+    ctl.Rule(error['very_negative'] & delta_error['positive'], (rms['medium'], lms['fast'])),
+    ctl.Rule(error['very_negative'] & delta_error['very_positive'], (rms['slow'], lms['fast'])),
 
-    ctl.Rule(error['negative'] & delta_error['highly_negative'], (left_motor_speed['fast'], right_motor_speed['very_slow'])),
-    ctl.Rule(error['negative'] & delta_error['negative'], (left_motor_speed['medium'], right_motor_speed['slow'])),
-    ctl.Rule(error['negative'] & delta_error['mid'], (left_motor_speed['medium'], right_motor_speed['medium'])),
-    ctl.Rule(error['negative'] & delta_error['positive'], (left_motor_speed['slow'], right_motor_speed['medium'])),
-    ctl.Rule(error['negative'] & delta_error['highly_positive'], (left_motor_speed['slow'], right_motor_speed['fast'])),
+    ctl.Rule(error['negative'] & delta_error['very_negative'], (rms['fast'], lms['slow'])),
+    ctl.Rule(error['negative'] & delta_error['negative'], (rms['fast'], lms['slow'])),
+    ctl.Rule(error['negative'] & delta_error['zero'], (rms['medium'], lms['slow'])),
+    ctl.Rule(error['negative'] & delta_error['positive'], (rms['medium'], lms['medium'])),
+    ctl.Rule(error['negative'] & delta_error['very_positive'], (rms['slow'], lms['fast'])),
 
-    ctl.Rule(error['mid'] & delta_error['highly_negative'], (left_motor_speed['medium'], right_motor_speed['fast'])),
-    ctl.Rule(error['mid'] & delta_error['negative'], (left_motor_speed['medium'], right_motor_speed['medium'])),
-    ctl.Rule(error['mid'] & delta_error['mid'], (left_motor_speed['medium'], right_motor_speed['medium'])),
-    ctl.Rule(error['mid'] & delta_error['positive'], (left_motor_speed['medium'], right_motor_speed['medium'])),
-    ctl.Rule(error['mid'] & delta_error['highly_positive'], (left_motor_speed['medium'], right_motor_speed['fast'])),
+    ctl.Rule(error['zero'] & delta_error['very_negative'], (rms['fast'], lms['medium'])),
+    ctl.Rule(error['zero'] & delta_error['negative'], (rms['fast'], lms['medium'])),
+    ctl.Rule(error['zero'] & delta_error['zero'], (rms['medium'], lms['medium'])),
+    ctl.Rule(error['zero'] & delta_error['positive'], (rms['medium'], lms['fast'])),
+    ctl.Rule(error['zero'] & delta_error['very_positive'], (rms['slow'], lms['medium'])),
 
-    ctl.Rule(error['positive'] & delta_error['highly_negative'], (left_motor_speed['slow'], right_motor_speed['medium'])),
-    ctl.Rule(error['positive'] & delta_error['negative'], (left_motor_speed['slow'], right_motor_speed['medium'])),
-    ctl.Rule(error['positive'] & delta_error['mid'], (left_motor_speed['medium'], right_motor_speed['medium'])),
-    ctl.Rule(error['positive'] & delta_error['positive'], (left_motor_speed['slow'], right_motor_speed['fast'])),
-    ctl.Rule(error['positive'] & delta_error['highly_positive'], (left_motor_speed['very_slow'], right_motor_speed['very_fast'])),
+    ctl.Rule(error['positive'] & delta_error['very_negative'], (rms['medium'], lms['fast'])),
+    ctl.Rule(error['positive'] & delta_error['negative'], (rms['medium'], lms['fast'])),
+    ctl.Rule(error['positive'] & delta_error['zero'], (rms['medium'], lms['medium'])),
+    ctl.Rule(error['positive'] & delta_error['positive'], (rms['slow'], lms['medium'])),
+    ctl.Rule(error['positive'] & delta_error['very_positive'], (rms['slow'], lms['fast'])),
 
-    ctl.Rule(error['highly_positive'] & delta_error['highly_negative'], (left_motor_speed['slow'], right_motor_speed['fast'])),
-    ctl.Rule(error['highly_positive'] & delta_error['negative'], (left_motor_speed['slow'], right_motor_speed['medium'])),
-    ctl.Rule(error['highly_positive'] & delta_error['mid'], (left_motor_speed['medium'], right_motor_speed['medium'])),
-    ctl.Rule(error['highly_positive'] & delta_error['positive'], (left_motor_speed['slow'], right_motor_speed['fast'])),
-    ctl.Rule(error['highly_positive'] & delta_error['highly_positive'], (left_motor_speed['very_slow'], right_motor_speed['very_fast']))
+    ctl.Rule(error['very_positive'] & delta_error['very_negative'], (rms['slow'], lms['fast'])),
+    ctl.Rule(error['very_positive'] & delta_error['negative'], (rms['slow'], lms['fast'])),
+    ctl.Rule(error['very_positive'] & delta_error['zero'], (rms['medium'], lms['fast'])),
+    ctl.Rule(error['very_positive'] & delta_error['positive'], (rms['medium'], lms['medium'])),
+    ctl.Rule(error['very_positive'] & delta_error['very_positive'], (rms['fast'], lms['slow']))
 ]
 
 # Control system
@@ -129,9 +114,15 @@ right_motor.setPosition(float("inf"))
 left_motor.setVelocity(0.0)
 right_motor.setVelocity(0.0)
 
+# CSV setup
+csv_file = open('robot_readings.csv', 'w', newline='')
+csv_writer = csv.writer(csv_file)
+csv_writer.writerow(['Error', 'Delta Error', 'LMS', 'RMS'])
+
 # Main loop:
 previous_error = 0
 max_speed = 6.28
+initial_position = None  
 
 while robot.step(timestep) != -1:
     img = cam.getImageArray()
@@ -144,25 +135,44 @@ while robot.step(timestep) != -1:
 
         cX, cY, im = get_center(crop_img)
         cv2.imshow("Image", im)
-        cv2.waitKey(15)
+        cv2.waitKey(33)
         
         width = im.shape[1]
-        center_point = width // 2
-        error = cX - center_point
-        delta_error = error - previous_error
-        previous_error = error
+        center_point = 210
+        error_value = cX - center_point
+        
+        if initial_position is None:
+            initial_position = cX
+        
+        delta_error_value = error_value - previous_error
+        previous_error = error_value
+
+        # Implement simple smoothing
+        error_value = (error_value + previous_error) / 2
+        
+        # Dead zone around zero error to reduce small oscillations
+        # if abs(error_value) < 10:
+        #     error_value = 0
+        #     delta_error_value = 0
 
         # Fuzzy inference
-        rms_sim.input['Error'] = error
-        rms_sim.input['Delta Error'] = delta_error
-        lms_sim.input['Error'] = error
-        lms_sim.input['Delta Error'] = delta_error
+        try:
+            rms_sim.input['Error'] = error_value
+            rms_sim.input['Delta Error'] = delta_error_value
+            lms_sim.input['Error'] = error_value
+            lms_sim.input['Delta Error'] = delta_error_value
 
-        rms_sim.compute()
-        lms_sim.compute()
+            rms_sim.compute()
+            lms_sim.compute()
 
-        right_speed = rms_sim.output['Right Motor Speed']
-        left_speed = lms_sim.output['Left Motor Speed']
+            right_speed = rms_sim.output['RMS']
+            left_speed = lms_sim.output['LMS']
+            
+        except Exception as e:
+            print(f"Error in fuzzy computation: {e}")
+            print(f"Error Value: {error_value}, Delta Error: {delta_error_value}")
+            right_speed = 0
+            left_speed = 0
 
         # Set motor velocities
         left_motor.setVelocity(left_speed)
@@ -172,10 +182,16 @@ while robot.step(timestep) != -1:
         print("=------------------------------=")
         print(f"Center point: {center_point}")
         print(f"Contour center X: {cX}")
-        print(f"Error: {error}")
-        print(f"Delta Error: {delta_error}")
+        print(f"Error: {error_value}")
+        print(f"Delta Error: {delta_error_value}")
         print(f"Left Motor Speed: {left_speed}")
         print(f"Right Motor Speed: {right_speed}")
+        
+        # Write to CSV
+        csv_writer.writerow([error_value, delta_error_value, left_speed, right_speed])
+        
+    else:
+        print("Tidak ada arena terdeteksi")
 
-# Exit cleanup
+csv_file.close()
 cv2.destroyAllWindows()

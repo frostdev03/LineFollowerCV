@@ -9,25 +9,28 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
-  position 0.05783348552426696 0.04605516847064469 2.8452513898388276
+  position -0.11654499940322208 0.07968822058094792 7.1677520454134775
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
-  floorSize 3 2
+  translation -0.11 0 0
+  floorSize 5 2
+  floorTileSize 6 2
   floorAppearance PBRAppearance {
     roughness 1
     roughnessMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/textures/parquetry/chequered_parquetry_roughness.jpg"
+        "C:/Users/fahri/OneDrive/Gambar/square_arena.png"
       ]
     }
     metalness 0
+    IBLStrength 0
     normalMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/textures/parquetry/chequered_parquetry_normal.jpg"
+        "C:/Users/fahri/OneDrive/Gambar/square_arena.png"
       ]
     }
     occlusionMap ImageTexture {
@@ -38,8 +41,8 @@ RectangleArena {
   }
 }
 Solid {
-  translation 0.031942 -0.022303 0.0091948
-  rotation 1 0 0 1.55
+  translation -2.09806 0.00763885 0.00337193
+  rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 -2.094395307179586
   scale 0.01 0.01 0.01
   children [
     Shape {
@@ -55,9 +58,9 @@ Solid {
   ]
 }
 E-puck {
-  translation 0.522231 0.388905 0.000395927
-  rotation 0.00013584199006160056 -0.00035758897383826566 0.9999999268385371 -2.487965307179586
-  controller "lfr_cam_trinity"
+  translation -1.88249 -0.170026 0.000143125
+  rotation -0.00041439387443920273 0.00048119008599434076 0.9999997983668887 1.560148537417997
+  controller "lfr_cam_fuzzy"
   camera_width 120
   camera_height 120
 }
