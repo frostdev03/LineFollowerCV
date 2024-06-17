@@ -1,6 +1,6 @@
 # Line Follower Robot
 
-<img src="https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/a2509794-f0d6-42ac-abc3-c2dec53bb90c" alt="jalur a lurus" width="450"/> <img src="https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/0e27cc69-067a-4140-a077-2cd0c7663780" alt="jalur b belok" width="400"/> 
+<img src="https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/a2509794-f0d6-42ac-abc3-c2dec53bb90c" alt="jalur a lurus" width="350"/> <img src="https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/0e27cc69-067a-4140-a077-2cd0c7663780" alt="jalur b belok" width="300"/> 
 
 ## Project Description
 This project implements fuzzy control to adjust the speed of the right and left motors based on position error and change in position error in a line follower robot. This robot is able to follow a predetermined line path by relying on the camera to detect the center of the line (arena) and adjust the motor speed to keep the robot stable and keep on track.
