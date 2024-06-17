@@ -1,6 +1,6 @@
 # Line Follower Robot
 
-![WhatsApp Image 2024-06-02 at 8 06 38 PM](https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/793c2230-d276-4fba-8cb5-ec62210725e6)
+![lfr_opencv_update](https://github.com/frostdev03/LineFollowerRobotWithCamera/assets/77367592/2d4acb3c-02b2-413f-952a-8817d60a9c06)
 
 ## Project Description
 This project implements fuzzy control to adjust the speed of the right and left motors based on position error and change in position error in a line follower robot. This robot is able to follow a predetermined line path by relying on the camera to detect the center of the line (arena) and adjust the motor speed to keep the robot stable and keep on track.
@@ -24,7 +24,7 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - Clone repository
   ```
   $ git clone https://github.com/frostdev03/LineFollowerRobotWithCamera
-  $ cd robot-line-follower
+  $ cd LineFollowerRobotWithCamera
   ```
 - Install dependency
   ```
@@ -34,7 +34,7 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - Run 
 
 ## Project Structure
-- lfr_cam_trinity.py: The main script to control the line follower robot.
+- lfr_cam_fuzzy.py: The main script to control the line follower robot.
 - robot_readings.csv: CSV file to store error, delta error, and motor speed data.
 - olah_data.ipynb: Script to visualize and analyze the collected data.
 - README.md: Project description.
