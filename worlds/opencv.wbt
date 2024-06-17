@@ -9,28 +9,31 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
-  position -0.11654499940322208 0.07968822058094792 7.1677520454134775
+  position -0.49637281548980916 7.420714783245014e-07 6.889810783604161
 }
 TexturedBackground {
+  skybox FALSE
+  skyColor [
+    1 1 1
+  ]
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
-  translation -0.11 0 0
-  floorSize 5 2
-  floorTileSize 6 2
+  translation -1.16 0.31 0
+  floorSize 50 50
+  floorTileSize 4 2
   floorAppearance PBRAppearance {
-    roughness 1
     roughnessMap ImageTexture {
       url [
-        "C:/Users/fahri/OneDrive/Gambar/square_arena.png"
+        "C:/Users/fahri/Downloads/protractor-46461_960_720.png"
       ]
     }
     metalness 0
     IBLStrength 0
     normalMap ImageTexture {
       url [
-        "C:/Users/fahri/OneDrive/Gambar/square_arena.png"
+        "C:/Users/fahri/OneDrive/Gambar/45.png"
       ]
     }
     occlusionMap ImageTexture {
@@ -40,26 +43,9 @@ RectangleArena {
     }
   }
 }
-Solid {
-  translation -2.09806 0.00763885 0.00337193
-  rotation -0.5773509358554485 0.5773489358556708 0.5773509358554485 -2.094395307179586
-  scale 0.01 0.01 0.01
-  children [
-    Shape {
-      appearance PBRAppearance {
-        baseColor 0 0 0
-      }
-      geometry Mesh {
-        url [
-          "E:/DOWNLOAD/Mini Track V1/Mini Track V1.obj"
-        ]
-      }
-    }
-  ]
-}
 E-puck {
-  translation -1.88249 -0.170026 0.000143125
-  rotation -0.00041439387443920273 0.00048119008599434076 0.9999997983668887 1.560148537417997
+  translation -0.15536 -0.439486 -0.00172933
+  rotation -0.07687821395565576 0.6396751161198376 -0.7647911388320737 0.00177651
   controller "lfr_cam_fuzzy"
   camera_width 120
   camera_height 120

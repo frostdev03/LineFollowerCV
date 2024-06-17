@@ -6,8 +6,7 @@ import skfuzzy.control as ctl
 import csv
 
 def get_center(im):
-    gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-    ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
+    ret, thresh = cv2.threshold(im, 127, 255, cv2.THRESH_BINARY_INV)
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     cX = 0
@@ -44,11 +43,11 @@ error['positive'] = fuzz.trapmf(error.universe, [0, 50, 200, 300])
 error['very_positive'] = fuzz.trapmf(error.universe, [100, 300, 420, 420])
 
 # Membership functions for delta_error
-delta_error['very_negative'] = fuzz.trapmf(delta_error.universe, [-420, -420, -300, -100])
+delta_error['very_negative'] = fuzz.trapmf(error.universe, [-420, -420, -300, -100])
 delta_error['negative'] = fuzz.trapmf(delta_error.universe, [-300, -200, -50, 0])
 delta_error['zero'] = fuzz.trimf(delta_error.universe, [-30, 0, 30])
 delta_error['positive'] = fuzz.trapmf(delta_error.universe, [0, 50, 200, 300])
-delta_error['very_positive'] = fuzz.trapmf(delta_error.universe, [100, 300, 420, 420])
+delta_error['very_positive'] = fuzz.trapmf(error.universe, [100, 300, 420, 420])
 
 # Membership functions for motor speed
 rms['slow'] = fuzz.trimf(rms.universe, [0, 0, 3.14])
@@ -132,9 +131,10 @@ while robot.step(timestep) != -1:
         img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
         img = cv2.resize(img, (0, 0), fx=3.5, fy=3.5)
         crop_img = cv2.flip(img, 1)
-
-        cX, cY, im = get_center(crop_img)
-        cv2.imshow("Image", im)
+        
+        gray_img = cv2.cvtColor(crop_img, cv2.COLOR_RGB2GRAY)
+        cX, cY, im = get_center(gray_img)
+        cv2.imshow("Grayscale Image", gray_img)
         cv2.waitKey(33)
         
         width = im.shape[1]
