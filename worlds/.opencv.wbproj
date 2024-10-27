@@ -6,7 +6,7 @@ minimizedPerspectives: 000000ff00000000fd000000020000000100000312000003acfc02000
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 0 "controllers/lfr_cam_fuzzy/lfr_cam_fuzzy.py"
+textFiles: 0 "../line_follower_cv/controllers/lfr_cam_fuzzy/lfr_cam_fuzzy.py"
 globalOptionalRendering: JointAxes::LightPositions
 consoles: Console:All:All
 renderingDevicePerspectives: e-puck:camera;1;1;0;0
