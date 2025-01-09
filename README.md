@@ -47,3 +47,5 @@ This project implements fuzzy control to adjust the speed of the right and left 
 - https://youtu.be/UieEEyVY2J4?si=aYjkGU8v1GYzxi4Q
 - https://youtu.be/HV6_usN4unc?si=AM7EdT1PBQ4XA-hd
 - https://www.youtube.com/watch?v=nLnp0tpZ0ok
+
+### This project already published as an article: https://ejournals.itda.ac.id/index.php/avitec/article/view/2304
